@@ -53,20 +53,25 @@ const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');
 const dataObj= JSON.parse(data);
 
 const server= http.createServer((req,res)=>{
-    const pathName=req.url;
+    // const pathName=req.url;
+    // parse(req.url) has many objects we ned only pathname and query so we initialize them to use from that method.
+    const { pathname, query} = url.parse(req.url, true);
 
     // Overview Page
-    if(pathName === '/' || pathName === '/overview'){
+    if(pathname === '/' || pathname === '/overview'){
         res.writeHead(200,{'content-type' :'text/html'});
         const cardsHtml = dataObj.map(el=>replaceTemplate(tempCard,el)).join('');
         const output = tempOverview.replace('{%PRODUCT_CARDS%}',cardsHtml);
         res.end(output);
     }
     // Products Page
-    else if (pathName === '/products'){
-        res.end('This is Products Page!');
+    else if (pathname === '/product'){
+        res.writeHead(200,{'content-type' :'text/html'});
+        const product = dataObj[query.id];
+        const output = replaceTemplate(tempProduct,product);
+        res.end(output);
         // API
-    }else if(pathName === '/api'){
+    }else if(pathname === '/api'){
         res.writeHead(200,{'content-type' :'application/json'});
             res.end(data);
             // Not Found

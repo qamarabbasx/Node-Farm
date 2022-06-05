@@ -35,47 +35,58 @@ console.log('Will Read this code first then Asynchronous ❤  ');
 ////////////////////////////////////////////////////////////
 // Server
 
-const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`,'utf-8');
-const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`,'utf-8');
-const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`,'utf-8');
+const tempOverview = fs.readFileSync(
+  `${__dirname}/templates/template-overview.html`,
+  'utf-8'
+);
+const tempProduct = fs.readFileSync(
+  `${__dirname}/templates/template-product.html`,
+  'utf-8'
+);
+const tempCard = fs.readFileSync(
+  `${__dirname}/templates/template-card.html`,
+  'utf-8'
+);
 
-const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');
-const dataObj= JSON.parse(data);
-const slugs = dataObj.map(el => slugify(el.productName , {lower: true}));
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataObj = JSON.parse(data);
+const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }));
 console.log(slugs);
 
-const server= http.createServer((req,res)=>{
-    // const pathName=req.url;
-    // parse(req.url) has many objects we ned only pathname and query so we initialize them to use from that method.
-    // console.log(url.parse(req.url));
-    const { pathname, query} = url.parse(req.url, true);
+const server = http.createServer((req, res) => {
+  // const pathName=req.url;
+  // parse(req.url) has many objects we ned only pathname and query so we initialize them to use from that method.
+  // console.log(url.parse(req.url));
+  const { pathname, query } = url.parse(req.url, true);
 
-    // Overview Page
-    if(pathname === '/' || pathname === '/overview'){
-        res.writeHead(200,{'content-type' :'text/html'});
-        const cardsHtml = dataObj.map(el=>replaceTemplate(tempCard,el)).join('');
-        const output = tempOverview.replace('{%PRODUCT_CARDS%}',cardsHtml);
-        res.end(output);
-    }
-    // Products Page
-    else if (pathname === '/product'){
-        res.writeHead(200,{'content-type' :'text/html'});
-        const product = dataObj[query.id];
-        const output = replaceTemplate(tempProduct,product);
-        res.end(output);
-        // API
-    }else if(pathname === '/api'){
-        res.writeHead(200,{'content-type' :'application/json'});
-            res.end(data);
-            // Not Found
-    }else{
-        res.writeHead(404,{
-            'Content-type':'text/html',
-            'my-own-header': 'Hello world from my own header'
-        });
-        res.end('<h1>Page Not found</h1>');
-    }
+  // Overview Page
+  if (pathname === '/' || pathname === '/overview') {
+    res.writeHead(200, { 'content-type': 'text/html' });
+    const cardsHtml = dataObj
+      .map((el) => replaceTemplate(tempCard, el))
+      .join('');
+    const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
+    res.end(output);
+  }
+  // Products Page
+  else if (pathname === '/product') {
+    res.writeHead(200, { 'content-type': 'text/html' });
+    const product = dataObj[query.id];
+    const output = replaceTemplate(tempProduct, product);
+    res.end(output);
+    // API
+  } else if (pathname === '/api') {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(data);
+    // Not Found
+  } else {
+    res.writeHead(404, {
+      'Content-type': 'text/html',
+      'my-own-header': 'Hello world from my own header',
+    });
+    res.end('<h1>Page Not found</h1>');
+  }
 });
-server.listen(8000,'127.0.0.1',()=>{
-    console.log('Listening to requests on port 8000');
+server.listen(8000, '127.0.0.1', () => {
+  console.log('Listening to requests on port 8000');
 });

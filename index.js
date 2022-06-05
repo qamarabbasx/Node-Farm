@@ -55,6 +55,7 @@ const dataObj= JSON.parse(data);
 const server= http.createServer((req,res)=>{
     // const pathName=req.url;
     // parse(req.url) has many objects we ned only pathname and query so we initialize them to use from that method.
+    // console.log(url.parse(req.url));
     const { pathname, query} = url.parse(req.url, true);
 
     // Overview Page

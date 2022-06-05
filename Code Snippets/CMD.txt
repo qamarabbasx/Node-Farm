@@ -1,0 +1,10 @@
+npm init
+to create more readable Urls
+npm i slugify
+to install nodemon which automatically restarts whenever we made a change
+npm i nodemon --save-dev
+to install it globally 
+npm i nodemon --global
+If this error came "nodemon.ps1 cannot be loaded because running scripts is disabled on this system" do this
+Run powershell as administrator and run the below command
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
